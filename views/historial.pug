@@ -1,0 +1,11 @@
+extends layout
+
+block content
+  head
+    title Imágenes
+  body
+    h1 Imágenes
+
+    
+    each imagen in imagenes
+      img(src=`data:image/${imagen.formato};base64,${imagen.datos.toString('base64')}`, alt=imagen.nombre)

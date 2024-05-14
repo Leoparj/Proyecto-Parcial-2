@@ -1,0 +1,48 @@
+extends layout
+
+block content
+  .login-container
+    link(rel='stylesheet', href='/css/layout.css')
+    link(rel="preconnect", href="https://fonts.googleapis.com")
+    link(rel="preconnect", href="https://fonts.gstatic.com", crossorigin)
+    link(href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap", rel="stylesheet")
+
+    if error
+      p= error
+
+    form#upload-form(action='/convertir', method='POST', enctype='multipart/form-data') 
+      .container
+        .form-group
+          //- Mostrar el número de intentos restantes aquí, solo si el usuario no ha iniciado sesión
+          if !user
+            p Número de intentos restantes: #{3 - conversionesRestantes}
+          label(for='imageInput') Selecciona una imagen
+          input(type='file', name='image', id='imageInput', accept='image/*') 
+          #imagePreview 
+          
+          p Selecciona un formato
+          select(name='opciones', id='opciones', class='form-select')
+            option(value='PNG') PNG
+            option(value='JPG') JPG
+            option(value='JPEG') JPEG
+            option(value='SVG') SVG
+            option(value='WEBP') WEBP
+          button(type='submit', class='form-button') Convertir imagen
+
+  script.
+    document.getElementById('imageInput').addEventListener('change', function(event) {
+      const file = event.target.files[0];
+      const reader = new FileReader();
+      const imagePreview = document.getElementById('imagePreview');
+
+      reader.onload = function(event) {
+        const imageUrl = event.target.result;
+        const img = document.createElement('img');
+        img.src = imageUrl;
+        img.alt = 'Vista previa de la imagen';
+        imagePreview.innerHTML = ''; // Limpia cualquier vista previa existente
+        imagePreview.appendChild(img); // Agrega la imagen al contenedor de vista previa
+      };
+
+      reader.readAsDataURL(file); // Lee el archivo como una URL de datos
+    });
